@@ -1,0 +1,31 @@
+repos:
+  - repo: local
+    hooks:
+      - id: ruff-check
+        name: ruff check (api)
+        entry: uv run --directory apps/api ruff check apps/api
+        language: system
+        types: [python]
+        pass_filenames: false
+
+      - id: mypy
+        name: mypy (api)
+        entry: uv run --directory apps/api mypy app tests
+        language: system
+        types: [python]
+        pass_filenames: false
+
+      - id: eslint
+        name: eslint (web)
+        entry: pnpm --filter web lint
+        language: system
+        types_or: [javascript, jsx, ts, tsx]
+        pass_filenames: false
+
+      - id: prettier
+        name: prettier (web)
+        entry: pnpm --filter web exec prettier --check "src/**/*.{ts,tsx,css}"
+        language: system
+        types_or: [javascript, jsx, ts, tsx, css, json]
+        pass_filenames: false
+
