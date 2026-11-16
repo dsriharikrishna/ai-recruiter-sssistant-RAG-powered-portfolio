@@ -1,4 +1,4 @@
-.PHONY: install dev test lint migrate down
+.PHONY: install dev test lint migrate up down logs
 
 install:
 	uv sync --directory apps/api --extra dev
@@ -13,7 +13,7 @@ test:
 	pnpm --filter web exec tsc --noEmit
 
 lint:
-	uv run --directory apps/api ruff check .
+	uv run --directory apps/api ruff check apps/api
 	uv run --directory apps/api mypy app tests
 	pnpm --filter web lint
 	pnpm --filter web exec prettier --check "src/**/*.{ts,tsx,css}"
@@ -21,6 +21,11 @@ lint:
 migrate:
 	uv run --directory apps/api alembic upgrade head
 
+up:
+	docker compose up -d
+
 down:
 	docker compose down -v
 
+logs:
+	docker compose logs -f
