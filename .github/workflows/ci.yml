@@ -1,0 +1,130 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  api:
+    name: Backend CI (API)
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: app_user
+          POSTGRES_PASSWORD: app_password
+          POSTGRES_DB: app_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "apps/api/uv.lock"
+
+      - name: Install Python dependencies
+        run: |
+          cd apps/api
+          uv sync --extra dev
+
+      - name: Run Ruff Lint and Format Checks
+        run: |
+          cd apps/api
+          uv run ruff check app tests
+          uv run ruff format --check app tests
+
+      - name: Run Mypy Type Checks
+        run: |
+          cd apps/api
+          uv run mypy --config-file pyproject.toml app tests
+
+      - name: Run Database Migrations
+        env:
+          DATABASE_URL: postgresql+asyncpg://app_user:app_password@localhost:5432/app_db
+          REDIS_URL: redis://localhost:6379/0
+          JWT_SECRET_KEY: test-secret-key-32-chars-long-minimum!
+          OPENAI_API_KEY: sk-test-key
+        run: |
+          cd apps/api
+          uv run alembic upgrade head
+
+      - name: Run Pytest (Unit, Tenant Isolation & Cross-Tenant Leak Tests)
+        env:
+          DATABASE_URL: postgresql+asyncpg://app_user:app_password@localhost:5432/app_db
+          REDIS_URL: redis://localhost:6379/0
+          JWT_SECRET_KEY: test-secret-key-32-chars-long-minimum!
+          OPENAI_API_KEY: sk-test-key
+        run: |
+          cd apps/api
+          uv run pytest tests -v
+
+      - name: Run Extraction & Evaluation Harness
+        run: |
+          cd apps/api
+          uv run python -m app.evals.run
+
+  web:
+    name: Frontend CI (Web)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Install Node dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run ESLint
+        run: |
+          cd apps/web
+          pnpm lint
+
+      - name: Run TypeScript Check
+        run: |
+          cd apps/web
+          pnpm tsc --noEmit
+
+      - name: Run Vitest Suite
+        run: |
+          cd apps/web
+          pnpm test:unit
+

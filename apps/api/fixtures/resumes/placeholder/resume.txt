@@ -1,0 +1,32 @@
+Alex Johnson
+San Francisco, CA | alex.johnson@example.com | (415) 555-2671
+GitHub: https://github.com/alexj | LinkedIn: https://linkedin.com/in/alexj
+
+SUMMARY
+Staff Software Engineer & Distributed Systems Architect with 10+ years architecting multi-tenant distributed platforms.
+
+EXPERIENCE
+Acme Cloud — Staff Infrastructure Engineer
+February 2021 - May 2024
+- Designed high-throughput Kafka and PostgreSQL pipelines.
+- Staff Infrastructure Engineer at Acme Cloud (2021-2024)
+- Reduced system p99 latency by 45%
+
+PROJECTS
+VectorStore-RS — https://github.com/alexj/vectorstore-rs
+- High-performance vector similarity indexing engine.
+- Built distributed vector search database in Rust using Rust, pgvector, and RAG.
+
+SKILLS
+- Python: Over 8 years building production Python and Rust services (Expert)
+- PostgreSQL (Expert)
+
+EDUCATION
+UC Berkeley — B.S. Computer Science
+September 2013 - May 2017
+- B.S. Computer Science from UC Berkeley 2013-2017
+
+CERTIFICATIONS
+- AWS Certified Solutions Architect — Amazon Web Services (Issued: April 2023)
+- AWS Solutions Architect Professional valid 2026
+

@@ -1,4 +1,3 @@
-import asyncio
 import json
 import uuid
 from collections.abc import AsyncGenerator
@@ -16,6 +15,9 @@ from sse_starlette.sse import EventSourceResponse
 
 from app.api.v1.mock_data import get_mock_approved_profile, get_mock_profile_draft
 from app.core.security import get_current_owner
+from app.modules.chat.service import answer
+from app.modules.extraction.service import extract_profile
+from app.modules.indexing.service import index_profile
 from app.schemas.api_v1 import (
     AccountDeleteResponse,
     FollowupQuestionsRequest,
@@ -33,7 +35,7 @@ from app.schemas.api_v1 import (
     UnansweredQuestionItem,
     UnansweredQuestionsResponse,
 )
-from app.schemas.profile import ApprovedProfile, ProfileDraft
+from app.schemas.profile import ApprovedProfile, FactSource, ProfileDraft
 
 router = APIRouter()
 
@@ -55,6 +57,12 @@ async def upload_resume(
 ) -> ResumeUploadResponse:
     if not file.filename:
         raise HTTPException(status_code=400, detail="Missing file name")
+
+    # Wire to extraction stub
+    content_bytes = await file.read()
+    text = content_bytes.decode("utf-8", errors="ignore")
+    _ = extract_profile(text=text, source=FactSource.resume)
+
     return ResumeUploadResponse(
         job_id=uuid.uuid4(),
         document_id=uuid.uuid4(),
@@ -125,6 +133,9 @@ async def approve_profile(
     owner_id: uuid.UUID = Depends(get_current_owner),  # noqa: B008
 ) -> ProfileApproveResponse:
     profile = get_mock_approved_profile()
+    # Wire to indexing stub
+    await index_profile(owner_id=owner_id, version=1)
+
     return ProfileApproveResponse(
         version=1,
         profile=profile,
@@ -265,26 +276,19 @@ async def get_public_site(slug: str) -> PublicSiteResponse:
     summary="Stream recruiter chatbot response via Server-Sent Events",
 )
 async def public_chat_stream(request: PublicChatRequest) -> EventSourceResponse:
-    answer_text = (
-        "Alex has extensive experience leading distributed cloud platform projects "
-        "and implementing PostgreSQL & pgvector systems with high availability."
-    )
-    words = answer_text.split()
+    mock_owner_id = uuid.uuid4()
+    mock_site_id = uuid.uuid4()
 
     async def event_generator() -> AsyncGenerator[dict[str, Any], None]:
-        # 1. Sources event
-        sources = [
-            {"id": "exp-1", "title": "Staff Infrastructure Engineer at Acme Cloud"}
-        ]
-        yield {"event": "sources", "data": json.dumps(sources)}
-        await asyncio.sleep(0.01)
-
-        # 2. Token events
-        for word in words:
-            yield {"event": "token", "data": json.dumps({"token": f"{word} "})}
-            await asyncio.sleep(0.01)
-
-        # 3. Done event
-        yield {"event": "done", "data": json.dumps({"done": True})}
+        async for chat_event in answer(
+            owner_id=mock_owner_id,
+            site_id=mock_site_id,
+            question=request.message,
+            history=[],
+        ):
+            yield {
+                "event": chat_event.event,
+                "data": json.dumps(chat_event.data),
+            }
 
     return EventSourceResponse(event_generator())

@@ -1,0 +1,113 @@
+{
+  "schema_version": "1.0.0",
+  "profile": {
+    "name": "Alex Johnson",
+    "headline": "Staff Software Engineer & Distributed Systems Architect",
+    "summary": "10+ years architecting multi-tenant distributed platforms."
+  },
+  "contact": {
+    "email": "alex.johnson@example.com",
+    "email_public": true,
+    "phone": "+14155552671",
+    "phone_public": false,
+    "links": [
+      {
+        "label": "GitHub",
+        "url": "https://github.com/alexj",
+        "is_public": true
+      },
+      {
+        "label": "LinkedIn",
+        "url": "https://linkedin.com/in/alexj",
+        "is_public": true
+      }
+    ]
+  },
+  "experiences": [
+    {
+      "id": "exp-1",
+      "type": "work",
+      "source": "resume",
+      "evidence": "Staff Infrastructure Engineer at Acme Cloud (2021-2024)",
+      "company": "Acme Cloud",
+      "role": "Staff Infrastructure Engineer",
+      "start_date": "2021-02",
+      "end_date": "2024-05",
+      "description": "Designed high-throughput Kafka and PostgreSQL pipelines.",
+      "highlights": [
+        "Reduced system p99 latency by 45%"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "proj-1",
+      "type": "personal_project",
+      "source": "portfolio",
+      "evidence": "Built distributed vector search database in Rust",
+      "name": "VectorStore-RS",
+      "description": "High-performance vector similarity indexing engine.",
+      "url": null,
+      "technologies": [
+        "Rust",
+        "pgvector",
+        "RAG"
+      ],
+      "start_date": null,
+      "end_date": null
+    }
+  ],
+  "skills": [
+    {
+      "id": "skill-1",
+      "type": "work",
+      "source": "resume",
+      "evidence": "Over 8 years building production Python and Rust services",
+      "name": "Python",
+      "category": "Programming Languages",
+      "level": "Expert"
+    },
+    {
+      "id": "skill-2",
+      "type": "learning",
+      "source": "user",
+      "evidence": null,
+      "name": "PostgreSQL",
+      "category": "Databases",
+      "level": "Expert"
+    }
+  ],
+  "educations": [
+    {
+      "id": "edu-1",
+      "type": "learning",
+      "source": "resume",
+      "evidence": "B.S. Computer Science from UC Berkeley 2013-2017",
+      "institution": "UC Berkeley",
+      "degree": "B.S.",
+      "field_of_study": "Computer Science",
+      "start_date": "2013-09",
+      "end_date": "2017-05"
+    }
+  ],
+  "certifications": [
+    {
+      "id": "cert-1",
+      "type": "certification",
+      "source": "resume",
+      "evidence": "AWS Solutions Architect Professional valid 2026",
+      "name": "AWS Certified Solutions Architect",
+      "issuer": "Amazon Web Services",
+      "issue_date": "2023-04",
+      "expiration_date": null,
+      "url": null
+    }
+  ],
+  "bot_settings": {
+    "salary_policy": "Market rate for Staff Level ($180k-$220k)",
+    "availability_policy": "Available with 30 days notice",
+    "tone": "professional, direct, and technically thorough",
+    "resume_downloadable": true
+  }
+}
+
