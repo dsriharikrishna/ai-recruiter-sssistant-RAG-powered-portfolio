@@ -1,5 +1,6 @@
-from typing import Any
 import uuid
+from typing import Any
+
 from pydantic import BaseModel, Field
 
 from app.schemas.profile import ApprovedProfile, ProfileDraft

@@ -79,9 +79,7 @@ async def get_current_owner(
     # 1. Dev Auth mode check
     if settings.DEV_AUTH:
         if settings.ENV.lower() == "production":
-            raise UnauthorizedError(
-                "DEV_AUTH is strictly forbidden in production mode"
-            )
+            raise UnauthorizedError("DEV_AUTH is strictly forbidden in production mode")
         if x_dev_user:
             try:
                 return uuid.UUID(x_dev_user)

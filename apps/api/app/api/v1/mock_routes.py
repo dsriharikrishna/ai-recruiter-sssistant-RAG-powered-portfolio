@@ -1,8 +1,9 @@
 import asyncio
-from collections.abc import AsyncGenerator
 import json
-from typing import Any
 import uuid
+from collections.abc import AsyncGenerator
+from typing import Any
+
 from fastapi import (
     APIRouter,
     Depends,
@@ -49,7 +50,7 @@ router = APIRouter()
     summary="Upload resume for extraction",
 )
 async def upload_resume(
-    file: UploadFile = File(...),
+    file: UploadFile = File(...),  # noqa: B008
     owner_id: uuid.UUID = Depends(get_current_owner),  # noqa: B008
 ) -> ResumeUploadResponse:
     if not file.filename:
@@ -200,7 +201,7 @@ async def get_unanswered_questions(
         questions=[
             UnansweredQuestionItem(
                 id=uuid.uuid4(),
-                question="What experience does Alex have with Kubernetes service meshes?",
+                question="Experience with Kubernetes service meshes?",
                 created_at="2026-11-16T10:30:00Z",
             )
         ]
@@ -265,8 +266,8 @@ async def get_public_site(slug: str) -> PublicSiteResponse:
 )
 async def public_chat_stream(request: PublicChatRequest) -> EventSourceResponse:
     answer_text = (
-        f"Alex has extensive experience leading distributed cloud platform projects "
-        f"and implementing PostgreSQL & pgvector systems with high availability."
+        "Alex has extensive experience leading distributed cloud platform projects "
+        "and implementing PostgreSQL & pgvector systems with high availability."
     )
     words = answer_text.split()
 

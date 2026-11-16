@@ -6,6 +6,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
+from app.api.v1.mock_routes import router as mock_routes_router
 from app.api.v1.ready import router as ready_router
 from app.core.config import get_settings
 from app.core.errors import (
@@ -27,7 +28,6 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         settings = get_settings()
         setup_logging(log_level=settings.LOG_LEVEL)
     except Exception:
-        # Fallback to defaults during unit testing where env may be partial
         setup_logging(log_level="INFO")
     yield
 
@@ -35,6 +35,8 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
 def create_app() -> FastAPI:
     application = FastAPI(
         title="AI Recruiter Assistant API",
+        version="1.0.0",
+        description="Multi-tenant portfolio builder with a RAG recruiter chatbot",
         lifespan=lifespan,
     )
 
@@ -64,6 +66,7 @@ def create_app() -> FastAPI:
         return HealthResponse(status="ok")
 
     application.include_router(ready_router)
+    application.include_router(mock_routes_router)
     return application
 
 
