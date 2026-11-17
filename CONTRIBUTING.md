@@ -15,11 +15,11 @@ This is a multi-tenant application. Data leakage between candidates is a critica
 
 ## 2. The Schema-Change Rule
 
-1. The canonical definition of candidate profile data is [apps/api/app/schemas/profile.py](apps/api/app/schemas/profile.py).
+1. The canonical definition of candidate profile data is [services/backend/app/schemas/profile.py](services/backend/app/schemas/profile.py).
 2. Whenever modifying `profile.py`:
    - Regenerate the JSON Schema: run the schema exporter script to update `docs/profile.schema.json`.
    - Update the database models in `app/models/models.py` and generate an Alembic migration (`alembic revision --autogenerate -m "..."`).
-   - Regenerate the OpenAPI spec (`docs/openapi.json`) and TypeScript types (`pnpm --filter web gen:api`).
+   - Regenerate the OpenAPI spec (`docs/openapi.json`) and TypeScript types (`cd services/frontend && npm run gen:api`).
 
 ---
 
@@ -31,8 +31,8 @@ This is a multi-tenant application. Data leakage between candidates is a critica
   - `ruff` lint and format
   - `mypy` strict type checking
   - `pytest` including tenant isolation and leak verification
-  - `pnpm lint` and `tsc --noEmit`
-  - `vitest` unit tests
+  - `npm run lint` and `npx tsc --noEmit`
+  - `npm run test:unit`
 
 ---
 
@@ -40,7 +40,7 @@ This is a multi-tenant application. Data leakage between candidates is a critica
 
 Any modifications to extraction prompts, models, chunking logic, or chat generation must include before/after evaluation run results in the PR description:
 ```bash
-uv run python -m app.evals.run
+cd services/backend && uv run python -m app.evals.run
 ```
 The pull request will be blocked if:
 - `invented_items > 0` (zero hallucinations target).

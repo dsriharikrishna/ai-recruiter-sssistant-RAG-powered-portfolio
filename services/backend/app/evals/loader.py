@@ -13,7 +13,7 @@ class Fixture(BaseModel):
 
 
 def load_fixtures(fixtures_dir: Path | None = None) -> list[Fixture]:
-    """Load all fixtures located in apps/api/fixtures/resumes/<name>/."""
+    """Load all fixtures located in services/backend/fixtures/resumes/<name>/."""
     if fixtures_dir is None:
         # Resolve relative to project root or current file
         base_dir = Path(__file__).resolve().parent.parent.parent

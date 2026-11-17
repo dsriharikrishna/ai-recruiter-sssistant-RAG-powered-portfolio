@@ -1,0 +1,21 @@
+services:
+  api:
+    build:
+      context: ../services/backend
+      dockerfile: Dockerfile
+    container_name: ai_recruiter_api
+    restart: unless-stopped
+    environment:
+      - ENV=${ENV:-development}
+      - DATABASE_URL=${DATABASE_URL:-postgresql+asyncpg://postgres:postgres@postgres:5432/ai_recruiter}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379/0}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-change-this-in-production-use-a-strong-secret-key-at-least-32-chars}
+      - JWT_ALGORITHM=${JWT_ALGORITHM:-HS256}
+      - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000}
+      - DEV_AUTH=${DEV_AUTH:-true}
+    volumes:
+      - ../services/backend:/app
+      - /app/.venv
+    ports:
+      - "${API_PORT:-8000}:8000"

@@ -38,6 +38,6 @@
 - **Decision**:
   - Python Pydantic v2 models in `app/schemas/profile.py` define the canonical profile schema.
   - FastAPI exports `docs/openapi.json`.
-  - Next.js frontend uses `openapi-typescript` to generate strict TypeScript interfaces (`apps/web/src/api/types.ts`).
+  - Next.js frontend uses `openapi-typescript` to generate strict TypeScript interfaces (`services/frontend/src/api/types.ts`).
 - **Consequences**: End-to-end type safety from database models down to React components with zero manual duplicate type definitions.
 

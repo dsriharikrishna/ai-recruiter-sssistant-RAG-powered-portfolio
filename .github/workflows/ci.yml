@@ -49,22 +49,22 @@ jobs:
         uses: astral-sh/setup-uv@v3
         with:
           enable-cache: true
-          cache-dependency-glob: "apps/api/uv.lock"
+          cache-dependency-glob: "services/backend/uv.lock"
 
       - name: Install Python dependencies
         run: |
-          cd apps/api
+          cd services/backend
           uv sync --extra dev
 
       - name: Run Ruff Lint and Format Checks
         run: |
-          cd apps/api
+          cd services/backend
           uv run ruff check app tests
           uv run ruff format --check app tests
 
       - name: Run Mypy Type Checks
         run: |
-          cd apps/api
+          cd services/backend
           uv run mypy --config-file pyproject.toml app tests
 
       - name: Run Database Migrations
@@ -74,7 +74,7 @@ jobs:
           JWT_SECRET_KEY: test-secret-key-32-chars-long-minimum!
           OPENAI_API_KEY: sk-test-key
         run: |
-          cd apps/api
+          cd services/backend
           uv run alembic upgrade head
 
       - name: Run Pytest (Unit, Tenant Isolation & Cross-Tenant Leak Tests)
@@ -84,12 +84,12 @@ jobs:
           JWT_SECRET_KEY: test-secret-key-32-chars-long-minimum!
           OPENAI_API_KEY: sk-test-key
         run: |
-          cd apps/api
+          cd services/backend
           uv run pytest tests -v
 
       - name: Run Extraction & Evaluation Harness
         run: |
-          cd apps/api
+          cd services/backend
           uv run python -m app.evals.run
 
   web:
@@ -104,27 +104,26 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 9
+          cache: "npm"
+          cache-dependency-path: "services/frontend/package-lock.json"
 
       - name: Install Node dependencies
-        run: pnpm install --frozen-lockfile
+        run: |
+          cd services/frontend
+          npm ci
 
       - name: Run ESLint
         run: |
-          cd apps/web
-          pnpm lint
+          cd services/frontend
+          npm run lint
 
       - name: Run TypeScript Check
         run: |
-          cd apps/web
-          pnpm tsc --noEmit
+          cd services/frontend
+          npx tsc --noEmit
 
       - name: Run Vitest Suite
         run: |
-          cd apps/web
-          pnpm test:unit
+          cd services/frontend
+          npm run test:unit
 

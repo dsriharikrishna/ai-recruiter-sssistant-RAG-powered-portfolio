@@ -6,9 +6,10 @@ A multi-tenant portfolio builder where candidates upload their resumes or portfo
 
 ## Architecture Overview
 
-- **Backend (`apps/api`)**: FastAPI async web application, SQLAlchemy 2.0 with PostgreSQL + pgvector (HNSW) and tsvector (BM25 hybrid search), Redis caching, Alembic migrations, and strict tenant isolation via Postgres Row Level Security (RLS).
-- **Frontend (`apps/web`)**: Next.js 16 (App Router), React 19, TypeScript strict mode, TanStack Query, Tailwind CSS, auto-generated OpenAPI typed client, and Server-Sent Events (SSE) streaming recruiter chat widget.
-- **Evaluation Harness (`apps/api/app/evals`)**: Deterministic evaluation framework verifying zero invented facts and 100% field extraction accuracy across resume fixtures.
+- **Backend (`services/backend`)**: FastAPI async web application, SQLAlchemy 2.0 with PostgreSQL + pgvector (HNSW) and tsvector (BM25 hybrid search), Redis caching, Alembic migrations, and strict tenant isolation via Postgres Row Level Security (RLS).
+- **Frontend (`services/frontend`)**: Next.js 16 (App Router), React 19, TypeScript strict mode, TanStack Query, Tailwind CSS, auto-generated OpenAPI typed client, and Server-Sent Events (SSE) streaming recruiter chat widget.
+- **Infrastructure (`infra/`)**: Independent docker-compose setups for data services (PostgreSQL + pgvector, Redis) and isolated backend/frontend containers.
+- **Evaluation Harness (`services/backend/app/evals`)**: Deterministic evaluation framework verifying zero invented facts and 100% field extraction accuracy across resume fixtures.
 
 ---
 
@@ -16,7 +17,7 @@ A multi-tenant portfolio builder where candidates upload their resumes or portfo
 
 ### 1. Prerequisites
 - Python 3.12+ and [uv](https://github.com/astral-sh/uv)
-- Node.js 20+ and [pnpm](https://pnpm.io/)
+- Node.js 20+ and npm (Docker image builds use pnpm internally)
 - Docker & Docker Compose (optional for local full-stack run)
 
 ### 2. Clone and Configure Environment
@@ -40,9 +41,9 @@ make down
 
 ### 4. Local Development Without Docker
 
-#### Backend (`apps/api`)
+#### Backend (`services/backend`)
 ```bash
-cd apps/api
+cd services/backend
 # Install dependencies
 uv sync --extra dev
 
@@ -53,14 +54,14 @@ uv run alembic upgrade head
 uv run uvicorn app.main:app --reload --port 8000
 ```
 
-#### Frontend (`apps/web`)
+#### Frontend (`services/frontend`)
 ```bash
-cd apps/web
+cd services/frontend
 # Install dependencies
-pnpm install
+npm install
 
 # Start Next.js dev server on http://localhost:3000
-pnpm dev
+npm run dev
 ```
 
 ---
@@ -69,24 +70,24 @@ pnpm dev
 
 Run the entire verification suite:
 ```bash
-# Run all unit tests, linters, and type checkers across apps
+# Run all unit tests, linters, and type checkers across services
 make test
 ```
 
 Or run per-service:
 ```bash
 # Backend checks
-cd apps/api
+cd services/backend
 uv run ruff check app tests
 uv run mypy --config-file pyproject.toml app tests
 uv run pytest tests
 uv run python -m app.evals.run
 
 # Frontend checks
-cd apps/web
-pnpm tsc --noEmit
-pnpm lint
-pnpm test:unit
+cd services/frontend
+npx tsc --noEmit
+npm run lint
+npm run test:unit
 ```
 
 ---
