@@ -1,8 +1,0 @@
-{
-  "name": "ai-recruiter-assistant",
-  "private": true,
-  "scripts": {
-    "lint": "pnpm --filter web lint",
-    "format": "pnpm --filter web format"
-  }
-}
