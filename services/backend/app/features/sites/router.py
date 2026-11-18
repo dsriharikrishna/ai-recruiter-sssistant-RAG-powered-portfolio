@@ -125,9 +125,7 @@ async def get_public_site(
     site_res = await session.execute(select(Site).where(Site.slug == slug))
     site = site_res.scalar_one_or_none()
     if not site:
-        raise HTTPException(
-            status_code=404, detail=f"Public portfolio '/{slug}' was not found"
-        )
+        raise HTTPException(status_code=404, detail=f"Public portfolio '/{slug}' was not found")
 
     # 2. Get the approved version for this site
     ver_res = await session.execute(
@@ -138,9 +136,7 @@ async def get_public_site(
     )
     version_record = ver_res.scalar_one_or_none()
     if not version_record:
-        raise HTTPException(
-            status_code=404, detail="Published profile version not found"
-        )
+        raise HTTPException(status_code=404, detail="Published profile version not found")
 
     approved = ApprovedProfile(**version_record.approved)
 
@@ -155,11 +151,7 @@ async def get_public_site(
         contact=PublicContact(
             email=approved.contact.email if approved.contact.email_public else None,
             phone=approved.contact.phone if approved.contact.phone_public else None,
-            links=[
-                {"label": l.label, "url": l.url}
-                for l in approved.contact.links
-                if l.is_public
-            ],
+            links=[{"label": lnk.label, "url": lnk.url} for lnk in approved.contact.links if lnk.is_public],
         ),
         experiences=approved.experiences,
         projects=approved.projects,

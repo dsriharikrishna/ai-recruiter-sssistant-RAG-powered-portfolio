@@ -63,9 +63,7 @@ def get_token_verifier() -> TokenVerifier:
     settings = get_settings()
     if settings.JWKS_URL:
         return JWKSTokenVerifier(settings.JWKS_URL)
-    return SecretKeyTokenVerifier(
-        secret_key=settings.JWT_SECRET_KEY, algorithm=settings.JWT_ALGORITHM
-    )
+    return SecretKeyTokenVerifier(secret_key=settings.JWT_SECRET_KEY, algorithm=settings.JWT_ALGORITHM)
 
 
 async def get_current_owner(
@@ -93,9 +91,7 @@ async def get_current_owner(
 
     parts = authorization.split()
     if len(parts) != 2 or parts[0].lower() != "bearer":
-        raise UnauthorizedError(
-            "Invalid Authorization format. Expected 'Bearer <token>'"
-        )
+        raise UnauthorizedError("Invalid Authorization format. Expected 'Bearer <token>'")
 
     token = parts[1]
     verifier = get_token_verifier()

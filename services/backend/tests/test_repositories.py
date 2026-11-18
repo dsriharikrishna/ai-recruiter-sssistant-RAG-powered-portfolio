@@ -1,27 +1,34 @@
 import inspect
 import uuid
 from collections.abc import AsyncGenerator
+from typing import Any
 
 import pytest
 import pytest_asyncio
+from pgvector.sqlalchemy import Vector
+from sqlalchemy.dialects.postgresql import JSONB, TSVECTOR
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.ext.compiler import compiles
 
 from app.core.config import Settings
-from sqlalchemy.ext.compiler import compiles
-from sqlalchemy.dialects.postgresql import TSVECTOR, JSONB
-from pgvector.sqlalchemy import Vector
+
+
+from typing import Any
 
 @compiles(TSVECTOR, "sqlite")
-def compile_tsvector_sqlite(type_, compiler, **kw):
+def compile_tsvector_sqlite(type_: Any, compiler: Any, **kw: Any) -> str:
     return "TEXT"
+
 
 @compiles(Vector, "sqlite")
-def compile_vector_sqlite(type_, compiler, **kw):
+def compile_vector_sqlite(type_: Any, compiler: Any, **kw: Any) -> str:
     return "TEXT"
 
+
 @compiles(JSONB, "sqlite")
-def compile_jsonb_sqlite(type_, compiler, **kw):
+def compile_jsonb_sqlite(type_: Any, compiler: Any, **kw: Any) -> str:
     return "JSON"
+
 
 from app.core.errors import NotFoundError
 from app.models.base import Base

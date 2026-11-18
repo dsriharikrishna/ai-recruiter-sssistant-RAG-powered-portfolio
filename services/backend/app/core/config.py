@@ -1,3 +1,5 @@
+from typing import Any
+
 from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -45,7 +47,7 @@ class Settings(BaseSettings):
 
     @field_validator("DEV_AUTH", mode="after")
     @classmethod
-    def validate_dev_auth_env(cls, v: bool, info) -> bool:
+    def validate_dev_auth_env(cls, v: bool, info: Any) -> bool:
         env = info.data.get("ENV", "development")
         if isinstance(env, str) and env.lower() == "production" and v:
             raise ValueError("DEV_AUTH cannot be enabled when ENV=production")

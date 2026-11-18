@@ -8,7 +8,11 @@ export class ApiError extends Error {
   public readonly isForbidden: boolean;
   public readonly isNotFound: boolean;
 
-  constructor(status: number, message: string, errorResponse?: ApiErrorResponse) {
+  constructor(
+    status: number,
+    message: string,
+    errorResponse?: ApiErrorResponse
+  ) {
     super(message);
     this.name = "ApiError";
     this.status = status;

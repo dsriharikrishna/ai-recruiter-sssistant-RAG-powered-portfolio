@@ -7,7 +7,10 @@ export const dashboardService = {
     return apiClient.get<SiteInfo>(API_ENDPOINTS.SITE.GET);
   },
 
-  async publishSite(payload: { template?: string; theme?: string }): Promise<SiteInfo> {
+  async publishSite(payload: {
+    template?: string;
+    theme?: string;
+  }): Promise<SiteInfo> {
     return apiClient.post<SiteInfo>(API_ENDPOINTS.SITE.PUBLISH, payload);
   },
 
@@ -24,10 +27,15 @@ export const dashboardService = {
   async uploadResume(file: File): Promise<UploadResumeResponse> {
     const formData = new FormData();
     formData.append("file", file);
-    return apiClient.post<UploadResumeResponse>(API_ENDPOINTS.RESUMES.UPLOAD, formData);
+    return apiClient.post<UploadResumeResponse>(
+      API_ENDPOINTS.RESUMES.UPLOAD,
+      formData
+    );
   },
 
-  async getJobStatus(jobId: string): Promise<{ job_id: string; status: string }> {
+  async getJobStatus(
+    jobId: string
+  ): Promise<{ job_id: string; status: string }> {
     return apiClient.get<{ job_id: string; status: string }>(
       API_ENDPOINTS.RESUMES.JOB_STATUS(jobId)
     );

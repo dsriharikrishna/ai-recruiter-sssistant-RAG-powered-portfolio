@@ -2,7 +2,6 @@ import asyncio
 import uuid
 from collections.abc import AsyncIterator
 from enum import StrEnum
-from typing import Any
 
 from sqlalchemy import select
 
@@ -23,10 +22,7 @@ def route_question(question: str, history: list[ChatMessageHistory] | list[dict[
     q_lower = question.lower()
     if any(k in q_lower for k in ["email", "phone", "contact", "linkedin", "reach", "call"]):
         return Route.CONTACT_INFO
-    if any(
-        k in q_lower
-        for k in ["weather", "politics", "president", "recipe", "who won", "bitcoin", "crypto"]
-    ):
+    if any(k in q_lower for k in ["weather", "politics", "president", "recipe", "who won", "bitcoin", "crypto"]):
         return Route.OUT_OF_SCOPE
     return Route.PROFILE_RAG
 
@@ -71,16 +67,18 @@ async def answer(
 
     candidate_name = approved_profile.profile.name
     experiences = approved_profile.experiences
-    skills = approved_profile.skills
     projects = approved_profile.projects
     contact = approved_profile.contact
 
     # Route: Contact Information
     if route == Route.CONTACT_INFO:
-        links_str = ", ".join([l.url for l in contact.links if l.is_public])
+        links_str = ", ".join([lnk.url for lnk in contact.links if lnk.is_public])
         email_str = contact.email if contact.email_public else "Private"
         contact_msg = f"{candidate_name}'s contact: Email: {email_str}. Links: {links_str or 'None provided'}."
-        yield ChatEvent(event="sources", data={"sources": [ChatSourceItem(entity_id="contact", title="Verified Contact Details").model_dump()]})
+        yield ChatEvent(
+            event="sources",
+            data={"sources": [ChatSourceItem(entity_id="contact", title="Verified Contact Details").model_dump()]},
+        )
         for word in contact_msg.split():
             yield ChatEvent(event="token", data={"token": f"{word} "})
             await asyncio.sleep(0.015)
@@ -119,10 +117,7 @@ async def answer(
 
     headline = approved_profile.profile.headline
     summary = approved_profile.profile.summary
-    answer_text = (
-        f"Based on {candidate_name}'s verified background ({headline}): "
-        + " ".join(matched_snippets[:2])
-    )
+    answer_text = f"Based on {candidate_name}'s verified background ({headline}): " + " ".join(matched_snippets[:2])
     if not matched_snippets:
         answer_text = f"{candidate_name}'s verified record states: {summary}"
 

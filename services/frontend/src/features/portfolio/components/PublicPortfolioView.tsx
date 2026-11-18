@@ -27,10 +27,13 @@ interface PublicPortfolioViewProps {
 
 export function PublicPortfolioView({ slug }: PublicPortfolioViewProps) {
   const { data: site, isLoading, error } = usePublicSite(slug);
-  const [activeTab, setActiveTab] = useState<"all" | "experience" | "projects" | "skills">("all");
+  const [activeTab, setActiveTab] = useState<
+    "all" | "experience" | "projects" | "skills"
+  >("all");
   const [question, setQuestion] = useState("");
 
-  const { messages, isStreaming, sendMessage, chatBottomRef } = useRecruiterChat(slug);
+  const { messages, isStreaming, sendMessage, chatBottomRef } =
+    useRecruiterChat(slug);
 
   const suggestedPrompts = [
     `Tell me about ${site?.name ? `${site.name}'s` : "their"} professional background`,
@@ -50,13 +53,13 @@ export function PublicPortfolioView({ slug }: PublicPortfolioViewProps) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#07090E] text-slate-100 flex items-center justify-center p-8">
-        <div className="flex flex-col items-center gap-4 text-slate-400 text-sm">
+      <div className="flex min-h-screen items-center justify-center bg-[#07090E] p-8 text-slate-100">
+        <div className="flex flex-col items-center gap-4 text-sm text-slate-400">
           <div className="relative">
-            <div className="w-12 h-12 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
-              <Bot className="w-6 h-6 animate-pulse" />
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-indigo-500/30 bg-indigo-600/20 text-indigo-400">
+              <Bot className="h-6 w-6 animate-pulse" />
             </div>
-            <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-emerald-400 animate-ping" />
+            <span className="absolute -top-1 -right-1 h-3 w-3 animate-ping rounded-full bg-emerald-400" />
           </div>
           <span>Loading verified candidate portfolio...</span>
         </div>
@@ -66,18 +69,20 @@ export function PublicPortfolioView({ slug }: PublicPortfolioViewProps) {
 
   if (error || !site) {
     return (
-      <div className="min-h-screen bg-[#07090E] text-slate-100 flex flex-col items-center justify-center p-8 space-y-4">
-        <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-3 max-w-md">
-          <div className="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20 mx-auto flex items-center justify-center">
-            <Bot className="w-5 h-5" />
+      <div className="flex min-h-screen flex-col items-center justify-center space-y-4 bg-[#07090E] p-8 text-slate-100">
+        <div className="max-w-md space-y-3 rounded-2xl border border-slate-800 bg-slate-900 p-4 text-center">
+          <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl border border-rose-500/20 bg-rose-500/10 text-rose-400">
+            <Bot className="h-5 w-5" />
           </div>
           <h2 className="text-xl font-bold text-white">Portfolio Not Found</h2>
-          <p className="text-xs text-slate-400 leading-relaxed">
-            The candidate portfolio <span className="font-mono text-indigo-300">/{slug}</span> has not been published or does not exist.
+          <p className="text-xs leading-relaxed text-slate-400">
+            The candidate portfolio{" "}
+            <span className="font-mono text-indigo-300">/{slug}</span> has not
+            been published or does not exist.
           </p>
           <Link
             href="/"
-            className="inline-block mt-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-semibold"
+            className="mt-2 inline-block rounded-lg bg-indigo-600 px-4 py-2 text-xs font-semibold text-white hover:bg-indigo-500"
           >
             Return to Home
           </Link>
@@ -87,74 +92,76 @@ export function PublicPortfolioView({ slug }: PublicPortfolioViewProps) {
   }
 
   return (
-    <div className="min-h-screen bg-[#07090E] text-slate-100 font-sans selection:bg-indigo-500 selection:text-white flex flex-col lg:flex-row antialiased">
+    <div className="flex min-h-screen flex-col bg-[#07090E] font-sans text-slate-100 antialiased selection:bg-indigo-500 selection:text-white lg:flex-row">
       {/* Left Column: Candidate Portfolio */}
-      <main className="flex-1 overflow-y-auto px-6 py-8 sm:px-10 lg:px-14 lg:py-12 space-y-12 max-w-5xl">
+      <main className="max-w-5xl flex-1 space-y-12 overflow-y-auto px-6 py-8 sm:px-10 lg:px-14 lg:py-12">
         <div className="flex items-center justify-between border-b border-slate-800/80 pb-5">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-xs font-medium text-slate-400 hover:text-white transition group"
+            className="group inline-flex items-center gap-2 text-xs font-medium text-slate-400 transition hover:text-white"
           >
-            <div className="p-1 rounded-md bg-slate-800 border border-slate-700 group-hover:border-slate-600">
-              <ArrowLeft className="w-3.5 h-3.5" />
+            <div className="rounded-md border border-slate-700 bg-slate-800 p-1 group-hover:border-slate-600">
+              <ArrowLeft className="h-3.5 w-3.5" />
             </div>
             Back to Platform
           </Link>
 
           <div className="flex items-center gap-3">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono font-medium">
-              <ShieldCheck className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 font-mono text-xs font-medium text-emerald-400">
+              <ShieldCheck className="h-3.5 w-3.5" />
               <span>Grounded Evidence &bull; RLS Protected</span>
             </div>
           </div>
         </div>
 
         {/* Hero Card */}
-        <section className="relative rounded-3xl bg-gradient-to-b from-slate-900/90 to-slate-950 border border-slate-800/80 p-8 sm:p-10 shadow-2xl overflow-hidden space-y-6">
-          <div className="absolute top-0 right-0 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+        <section className="relative space-y-6 overflow-hidden rounded-3xl border border-slate-800/80 bg-gradient-to-b from-slate-900/90 to-slate-950 p-8 shadow-2xl sm:p-10">
+          <div className="pointer-events-none absolute top-0 right-0 h-80 w-80 rounded-full bg-indigo-500/10 blur-3xl" />
 
-          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-6">
-            <div className="space-y-3 max-w-2xl">
+          <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-start">
+            <div className="max-w-2xl space-y-3">
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 font-mono">
+                <span className="rounded-full border border-indigo-500/20 bg-indigo-500/10 px-2.5 py-1 font-mono text-[10px] font-bold tracking-wider text-indigo-400 uppercase">
                   Verified Candidate
                 </span>
-                <span className="text-xs text-slate-500 font-mono">portfolio.domain/{site.slug}</span>
+                <span className="font-mono text-xs text-slate-500">
+                  portfolio.domain/{site.slug}
+                </span>
               </div>
-              <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+              <h1 className="text-3xl font-black tracking-tight text-white sm:text-5xl">
                 {site.name}
               </h1>
-              <p className="text-lg sm:text-xl text-indigo-300 font-medium">
+              <p className="text-lg font-medium text-indigo-300 sm:text-xl">
                 {site.headline}
               </p>
-              <p className="text-sm text-slate-300 leading-relaxed pt-1">
+              <p className="pt-1 text-sm leading-relaxed text-slate-300">
                 {site.summary}
               </p>
             </div>
 
-            <div className="flex sm:flex-col gap-2 shrink-0">
+            <div className="flex shrink-0 gap-2 sm:flex-col">
               {site.contact?.email && (
                 <a
                   href={`mailto:${site.contact.email}`}
-                  className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-slate-200 flex items-center justify-center gap-2 transition"
+                  className="flex items-center justify-center gap-2 rounded-xl border border-slate-700 bg-slate-800 px-4 py-2 text-xs font-semibold text-slate-200 transition hover:bg-slate-700"
                 >
-                  <Mail className="w-3.5 h-3.5 text-indigo-400" />
+                  <Mail className="h-3.5 w-3.5 text-indigo-400" />
                   Contact
                 </a>
               )}
             </div>
           </div>
 
-          <div className="pt-4 border-t border-slate-800/80 flex flex-wrap items-center gap-4 text-xs text-slate-400">
+          <div className="flex flex-wrap items-center gap-4 border-t border-slate-800/80 pt-4 text-xs text-slate-400">
             {site.contact?.email && (
               <span className="flex items-center gap-1.5 text-slate-300">
-                <Mail className="w-3.5 h-3.5 text-indigo-400" />
+                <Mail className="h-3.5 w-3.5 text-indigo-400" />
                 {site.contact.email}
               </span>
             )}
             {site.contact?.phone && (
               <span className="flex items-center gap-1.5 text-slate-300">
-                <Phone className="w-3.5 h-3.5 text-sky-400" />
+                <Phone className="h-3.5 w-3.5 text-sky-400" />
                 {site.contact.phone}
               </span>
             )}
@@ -164,10 +171,10 @@ export function PublicPortfolioView({ slug }: PublicPortfolioViewProps) {
                 href={link.url}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-1 text-indigo-300 hover:text-white underline decoration-slate-600 hover:decoration-indigo-400 transition"
+                className="flex items-center gap-1 text-indigo-300 underline decoration-slate-600 transition hover:text-white hover:decoration-indigo-400"
               >
                 <span>{link.label}</span>
-                <ExternalLink className="w-3 h-3 opacity-70" />
+                <ExternalLink className="h-3 w-3 opacity-70" />
               </a>
             ))}
           </div>
@@ -177,40 +184,40 @@ export function PublicPortfolioView({ slug }: PublicPortfolioViewProps) {
         <div className="flex gap-2 border-b border-slate-800/80 pb-3 text-xs font-semibold">
           <button
             onClick={() => setActiveTab("all")}
-            className={`px-3 py-1.5 rounded-lg transition ${
+            className={`rounded-lg px-3 py-1.5 transition ${
               activeTab === "all"
                 ? "bg-indigo-600 text-white"
-                : "text-slate-400 hover:text-white hover:bg-slate-800/60"
+                : "text-slate-400 hover:bg-slate-800/60 hover:text-white"
             }`}
           >
             All Background
           </button>
           <button
             onClick={() => setActiveTab("experience")}
-            className={`px-3 py-1.5 rounded-lg transition ${
+            className={`rounded-lg px-3 py-1.5 transition ${
               activeTab === "experience"
                 ? "bg-indigo-600 text-white"
-                : "text-slate-400 hover:text-white hover:bg-slate-800/60"
+                : "text-slate-400 hover:bg-slate-800/60 hover:text-white"
             }`}
           >
             Work Experience ({(site.experiences ?? []).length})
           </button>
           <button
             onClick={() => setActiveTab("projects")}
-            className={`px-3 py-1.5 rounded-lg transition ${
+            className={`rounded-lg px-3 py-1.5 transition ${
               activeTab === "projects"
                 ? "bg-indigo-600 text-white"
-                : "text-slate-400 hover:text-white hover:bg-slate-800/60"
+                : "text-slate-400 hover:bg-slate-800/60 hover:text-white"
             }`}
           >
             Projects ({(site.projects ?? []).length})
           </button>
           <button
             onClick={() => setActiveTab("skills")}
-            className={`px-3 py-1.5 rounded-lg transition ${
+            className={`rounded-lg px-3 py-1.5 transition ${
               activeTab === "skills"
                 ? "bg-indigo-600 text-white"
-                : "text-slate-400 hover:text-white hover:bg-slate-800/60"
+                : "text-slate-400 hover:bg-slate-800/60 hover:text-white"
             }`}
           >
             Skills ({(site.skills ?? []).length})
@@ -222,12 +229,14 @@ export function PublicPortfolioView({ slug }: PublicPortfolioViewProps) {
           <section className="space-y-6">
             <div className="flex items-center justify-between border-b border-slate-800/60 pb-3">
               <div className="flex items-center gap-2.5">
-                <div className="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-                  <Briefcase className="w-4 h-4" />
+                <div className="rounded-lg border border-indigo-500/20 bg-indigo-500/10 p-1.5 text-indigo-400">
+                  <Briefcase className="h-4 w-4" />
                 </div>
-                <h2 className="text-base font-bold text-white tracking-tight">Work Experience</h2>
+                <h2 className="text-base font-bold tracking-tight text-white">
+                  Work Experience
+                </h2>
               </div>
-              <span className="text-xs text-slate-500 font-mono">
+              <span className="font-mono text-xs text-slate-500">
                 {(site.experiences ?? []).length} Verified Roles
               </span>
             </div>
@@ -245,28 +254,37 @@ export function PublicPortfolioView({ slug }: PublicPortfolioViewProps) {
                 return (
                   <div
                     key={i}
-                    className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800/80 space-y-3 hover:border-slate-700 transition"
+                    className="space-y-3 rounded-2xl border border-slate-800/80 bg-slate-900/60 p-6 transition hover:border-slate-700"
                   >
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                    <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                       <div>
-                        <h3 className="text-base font-bold text-white">{exp.role}</h3>
-                        <p className="text-xs font-semibold text-indigo-400">{exp.company}</p>
+                        <h3 className="text-base font-bold text-white">
+                          {exp.role}
+                        </h3>
+                        <p className="text-xs font-semibold text-indigo-400">
+                          {exp.company}
+                        </p>
                       </div>
-                      <div className="flex items-center gap-1.5 text-xs text-slate-400 font-mono">
-                        <Calendar className="w-3.5 h-3.5 text-slate-500" />
+                      <div className="flex items-center gap-1.5 font-mono text-xs text-slate-400">
+                        <Calendar className="h-3.5 w-3.5 text-slate-500" />
                         <span>
                           {exp.start_date} &ndash; {exp.end_date || "Present"}
                         </span>
                       </div>
                     </div>
 
-                    <p className="text-xs text-slate-300 leading-relaxed pt-1">{exp.description}</p>
+                    <p className="pt-1 text-xs leading-relaxed text-slate-300">
+                      {exp.description}
+                    </p>
 
                     {exp.highlights && exp.highlights.length > 0 && (
-                      <div className="pt-2 space-y-1.5">
+                      <div className="space-y-1.5 pt-2">
                         {exp.highlights.map((h, hIdx) => (
-                          <div key={hIdx} className="flex items-start gap-2 text-xs text-slate-300">
-                            <span className="h-1.5 w-1.5 rounded-full bg-indigo-400 mt-1.5 shrink-0" />
+                          <div
+                            key={hIdx}
+                            className="flex items-start gap-2 text-xs text-slate-300"
+                          >
+                            <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-indigo-400" />
                             <span>{h}</span>
                           </div>
                         ))}
@@ -284,17 +302,19 @@ export function PublicPortfolioView({ slug }: PublicPortfolioViewProps) {
           <section className="space-y-6">
             <div className="flex items-center justify-between border-b border-slate-800/60 pb-3">
               <div className="flex items-center gap-2.5">
-                <div className="p-1.5 rounded-lg bg-sky-500/10 text-sky-400 border border-sky-500/20">
-                  <Layers className="w-4 h-4" />
+                <div className="rounded-lg border border-sky-500/20 bg-sky-500/10 p-1.5 text-sky-400">
+                  <Layers className="h-4 w-4" />
                 </div>
-                <h2 className="text-base font-bold text-white tracking-tight">Featured Projects</h2>
+                <h2 className="text-base font-bold tracking-tight text-white">
+                  Featured Projects
+                </h2>
               </div>
-              <span className="text-xs text-slate-500 font-mono">
+              <span className="font-mono text-xs text-slate-500">
                 {(site.projects ?? []).length} Items
               </span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               {(site.projects ?? []).map((projItem, i) => {
                 const proj = projItem as {
                   name?: string;
@@ -304,19 +324,23 @@ export function PublicPortfolioView({ slug }: PublicPortfolioViewProps) {
                 return (
                   <div
                     key={i}
-                    className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800/80 space-y-3 hover:border-slate-700 transition flex flex-col justify-between"
+                    className="flex flex-col justify-between space-y-3 rounded-2xl border border-slate-800/80 bg-slate-900/60 p-6 transition hover:border-slate-700"
                   >
                     <div className="space-y-2">
-                      <h3 className="text-sm font-bold text-white">{proj.name}</h3>
-                      <p className="text-xs text-slate-300 leading-relaxed">{proj.description}</p>
+                      <h3 className="text-sm font-bold text-white">
+                        {proj.name}
+                      </h3>
+                      <p className="text-xs leading-relaxed text-slate-300">
+                        {proj.description}
+                      </p>
                     </div>
 
                     {proj.technologies && proj.technologies.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 pt-2 border-t border-slate-800/80">
+                      <div className="flex flex-wrap gap-1.5 border-t border-slate-800/80 pt-2">
                         {proj.technologies.map((tech, tIdx) => (
                           <span
                             key={tIdx}
-                            className="px-2 py-0.5 rounded-md bg-slate-950 border border-slate-800 text-[10px] font-mono text-indigo-300"
+                            className="rounded-md border border-slate-800 bg-slate-950 px-2 py-0.5 font-mono text-[10px] text-indigo-300"
                           >
                             {tech}
                           </span>
@@ -335,17 +359,19 @@ export function PublicPortfolioView({ slug }: PublicPortfolioViewProps) {
           <section className="space-y-6">
             <div className="flex items-center justify-between border-b border-slate-800/60 pb-3">
               <div className="flex items-center gap-2.5">
-                <div className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                  <Cpu className="w-4 h-4" />
+                <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/10 p-1.5 text-emerald-400">
+                  <Cpu className="h-4 w-4" />
                 </div>
-                <h2 className="text-base font-bold text-white tracking-tight">Skills &amp; Verifications</h2>
+                <h2 className="text-base font-bold tracking-tight text-white">
+                  Skills &amp; Verifications
+                </h2>
               </div>
-              <span className="text-xs text-slate-500 font-mono">
+              <span className="font-mono text-xs text-slate-500">
                 {(site.skills ?? []).length} Verified Skills
               </span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
               {(site.skills ?? []).map((skillItem, i) => {
                 const skill = skillItem as {
                   name?: string;
@@ -355,18 +381,22 @@ export function PublicPortfolioView({ slug }: PublicPortfolioViewProps) {
                 return (
                   <div
                     key={i}
-                    className="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80 space-y-1"
+                    className="space-y-1 rounded-xl border border-slate-800/80 bg-slate-900/60 p-4"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-white">{skill.name}</span>
+                      <span className="text-xs font-bold text-white">
+                        {skill.name}
+                      </span>
                       {skill.level && (
-                        <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                        <span className="rounded border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 font-mono text-[10px] text-emerald-400">
                           {skill.level}
                         </span>
                       )}
                     </div>
                     {skill.category && (
-                      <p className="text-[11px] text-slate-400">{skill.category}</p>
+                      <p className="text-[11px] text-slate-400">
+                        {skill.category}
+                      </p>
                     )}
                   </div>
                 );
@@ -377,37 +407,40 @@ export function PublicPortfolioView({ slug }: PublicPortfolioViewProps) {
       </main>
 
       {/* Right Column: Recruiter AI Chat Sidebar */}
-      <aside className="w-full lg:w-[450px] xl:w-[480px] border-t lg:border-t-0 lg:border-l border-slate-800/90 bg-[#0B0E17] p-6 sm:p-8 flex flex-col h-[700px] lg:h-screen lg:sticky lg:top-0 shadow-2xl shrink-0">
-        <div className="border-b border-slate-800 pb-4 mb-4 space-y-2">
+      <aside className="flex h-[700px] w-full shrink-0 flex-col border-t border-slate-800/90 bg-[#0B0E17] p-6 shadow-2xl sm:p-8 lg:sticky lg:top-0 lg:h-screen lg:w-[450px] lg:border-t-0 lg:border-l xl:w-[480px]">
+        <div className="mb-4 space-y-2 border-b border-slate-800 pb-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="h-9 w-9 rounded-xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 shadow-md shadow-indigo-600/20">
-                <Bot className="w-5 h-5" />
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-indigo-500/30 bg-indigo-600/20 text-indigo-400 shadow-md shadow-indigo-600/20">
+                <Bot className="h-5 w-5" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-white tracking-tight">Recruiter Copilot</h3>
-                <span className="text-[10px] text-emerald-400 font-mono flex items-center gap-1">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <h3 className="text-sm font-bold tracking-tight text-white">
+                  Recruiter Copilot
+                </h3>
+                <span className="flex items-center gap-1 font-mono text-[10px] text-emerald-400">
+                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
                   Grounded in Verified Resume
                 </span>
               </div>
             </div>
-            <span className="text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 font-mono">
+            <span className="rounded border border-indigo-500/20 bg-indigo-500/10 px-2 py-0.5 font-mono text-[10px] font-bold tracking-wider text-indigo-400 uppercase">
               Live RAG
             </span>
           </div>
 
-          <p className="text-[11px] text-slate-400 leading-relaxed">
-            Directly probe {site.name}&apos;s verified experience. Answers are streamed live and backed by citation tags.
+          <p className="text-[11px] leading-relaxed text-slate-400">
+            Directly probe {site.name}&apos;s verified experience. Answers are
+            streamed live and backed by citation tags.
           </p>
 
-          <div className="pt-2 flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-1.5 pt-2">
             {suggestedPrompts.map((p, idx) => (
               <button
                 key={idx}
                 onClick={() => sendMessage(p)}
                 disabled={isStreaming}
-                className="text-[10px] text-left px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 hover:border-indigo-500/50 text-slate-300 hover:text-white transition disabled:opacity-50"
+                className="rounded-lg border border-slate-800 bg-slate-900 px-2.5 py-1 text-left text-[10px] text-slate-300 transition hover:border-indigo-500/50 hover:text-white disabled:opacity-50"
               >
                 &ldquo;{p}&rdquo;
               </button>
@@ -416,34 +449,34 @@ export function PublicPortfolioView({ slug }: PublicPortfolioViewProps) {
         </div>
 
         {/* Message Thread */}
-        <div className="flex-1 overflow-y-auto space-y-3.5 pr-1 text-xs">
+        <div className="flex-1 space-y-3.5 overflow-y-auto pr-1 text-xs">
           {messages.map((m, idx) => (
             <div
               key={idx}
-              className={`p-4 rounded-2xl ${
+              className={`rounded-2xl p-4 ${
                 m.role === "user"
-                  ? "bg-indigo-600 text-white ml-8 shadow-md shadow-indigo-600/20"
-                  : "bg-slate-900/90 border border-slate-800 text-slate-200 mr-4 space-y-2.5"
+                  ? "ml-8 bg-indigo-600 text-white shadow-md shadow-indigo-600/20"
+                  : "mr-4 space-y-2.5 border border-slate-800 bg-slate-900/90 text-slate-200"
               }`}
             >
               {m.role === "bot" && (
-                <div className="flex items-center gap-1.5 text-indigo-400 font-semibold text-[11px]">
-                  <Sparkles className="w-3 h-3" />
+                <div className="flex items-center gap-1.5 text-[11px] font-semibold text-indigo-400">
+                  <Sparkles className="h-3 w-3" />
                   <span>AI Recruiter Copilot</span>
                 </div>
               )}
               <p className="leading-relaxed whitespace-pre-wrap">{m.text}</p>
               {m.sources && m.sources.length > 0 && (
-                <div className="pt-2 border-t border-slate-800 text-[10px] text-slate-400 space-y-1.5">
-                  <span className="font-bold text-emerald-400 flex items-center gap-1 font-mono">
-                    <ShieldCheck className="w-3 h-3" />
+                <div className="space-y-1.5 border-t border-slate-800 pt-2 text-[10px] text-slate-400">
+                  <span className="flex items-center gap-1 font-mono font-bold text-emerald-400">
+                    <ShieldCheck className="h-3 w-3" />
                     Verified Citations:
                   </span>
                   <div className="flex flex-wrap gap-1">
                     {m.sources.map((s, i) => (
                       <span
                         key={i}
-                        className="bg-slate-950 px-2 py-0.5 rounded border border-slate-800 font-mono text-slate-300"
+                        className="rounded border border-slate-800 bg-slate-950 px-2 py-0.5 font-mono text-slate-300"
                       >
                         {s.title}
                       </span>
@@ -457,24 +490,27 @@ export function PublicPortfolioView({ slug }: PublicPortfolioViewProps) {
         </div>
 
         {/* Question Input Form */}
-        <form onSubmit={handleSend} className="pt-4 border-t border-slate-800 flex gap-2">
+        <form
+          onSubmit={handleSend}
+          className="flex gap-2 border-t border-slate-800 pt-4"
+        >
           <input
             type="text"
             placeholder="Ask about latency, Kafka, leadership..."
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
             disabled={isStreaming}
-            className="flex-1 px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition"
+            className="flex-1 rounded-xl border border-slate-800 bg-slate-950 px-3.5 py-2.5 text-xs text-white placeholder-slate-500 transition focus:border-indigo-500 focus:outline-none"
           />
           <button
             type="submit"
             disabled={isStreaming || !question.trim()}
-            className="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-800 disabled:text-slate-500 text-white text-xs font-semibold rounded-xl transition flex items-center justify-center shadow-md shadow-indigo-600/20"
+            className="flex items-center justify-center rounded-xl bg-indigo-600 px-4 py-2.5 text-xs font-semibold text-white shadow-md shadow-indigo-600/20 transition hover:bg-indigo-500 disabled:bg-slate-800 disabled:text-slate-500"
           >
             {isStreaming ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
+              <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
-              <Send className="w-4 h-4" />
+              <Send className="h-4 w-4" />
             )}
           </button>
         </form>

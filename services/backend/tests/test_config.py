@@ -16,9 +16,7 @@ def test_settings_missing_secrets_raises_error(monkeypatch: pytest.MonkeyPatch) 
 
 
 def test_settings_loaded_successfully(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv(
-        "DATABASE_URL", "postgresql+asyncpg://user:pass@localhost:5432/db"
-    )
+    monkeypatch.setenv("DATABASE_URL", "postgresql+asyncpg://user:pass@localhost:5432/db")
     monkeypatch.setenv("REDIS_URL", "redis://localhost:6379/0")
     monkeypatch.setenv("JWT_SECRET_KEY", "super-secret-key-that-is-long-enough")
     monkeypatch.setenv("OPENAI_API_KEY", "sk-proj-testkey123")

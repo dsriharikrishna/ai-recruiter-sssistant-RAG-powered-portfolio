@@ -1,4 +1,3 @@
-import hashlib
 import uuid
 
 from fastapi import (
@@ -15,8 +14,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.security import get_current_owner
 from app.db.rls import set_tenant_owner_id
 from app.db.session import get_db_session
-from app.models.models import Document, ExtractionJob, ProfileDraftModel, User
 from app.features.resumes.parser import extract_text_from_file, parse_resume_to_draft
+from app.models.models import Document, ExtractionJob, ProfileDraftModel, User
 from app.schemas.api_v1 import JobStatusResponse, ResumeUploadResponse
 from app.schemas.profile import FactSource
 
@@ -44,7 +43,6 @@ async def ensure_tenant_user_exists(session: AsyncSession, owner_id: uuid.UUID) 
     status_code=status.HTTP_202_ACCEPTED,
     summary="Upload resume for real extraction and persistence",
 )
-
 async def upload_resume(
     file: UploadFile = File(...),
     owner_id: uuid.UUID = Depends(get_current_owner),
@@ -85,9 +83,7 @@ async def upload_resume(
     session.add(job)
 
     # 6. Save or update ProfileDraftModel in database
-    draft_query = await session.execute(
-        select(ProfileDraftModel).where(ProfileDraftModel.owner_id == owner_id)
-    )
+    draft_query = await session.execute(select(ProfileDraftModel).where(ProfileDraftModel.owner_id == owner_id))
     existing_draft = draft_query.scalar_one_or_none()
 
     if existing_draft:
@@ -125,9 +121,9 @@ async def get_job_status(
 ) -> JobStatusResponse:
     await set_tenant_owner_id(session, owner_id)
     res = await session.execute(
-        select(ExtractionJob).where(
-            ExtractionJob.id == job_id, ExtractionJob.owner_id == owner_id
-        )
+        select(ExtractionJob)
+        .join(Document, ExtractionJob.document_id == Document.id)
+        .where(ExtractionJob.id == job_id, Document.owner_id == owner_id)
     )
     job = res.scalar_one_or_none()
     if not job:

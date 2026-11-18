@@ -2,7 +2,6 @@ import io
 import json
 import logging
 import re
-from typing import Any
 
 import httpx
 from pypdf import PdfReader
@@ -10,17 +9,13 @@ from pypdf import PdfReader
 from app.core.config import get_settings
 from app.features.resumes.prompts import EXTRACTION_SYSTEM_PROMPT
 from app.schemas.profile import (
-    ApprovedProfile,
     BotSettings,
-    Certification,
     Contact,
     ContactLink,
     Education,
     Experience,
     FactSource,
     FactType,
-    Flag,
-    FlagKind,
     Profile,
     ProfileDraft,
     Project,
@@ -109,7 +104,9 @@ def heuristic_parse_resume_to_draft(text: str, source: FactSource = FactSource.r
     headline = "Professional & Technical Specialist"
     summary = text[:280] if len(text) > 20 else f"{name} background and experience."
 
-    summary_match = re.search(r"(?:SUMMARY|PROFILE|OBJECTIVE)[:\s]+(.*?)(?=\n[A-Z]{3,}|\Z)", text, re.DOTALL | re.IGNORECASE)
+    summary_match = re.search(
+        r"(?:SUMMARY|PROFILE|OBJECTIVE)[:\s]+(.*?)(?=\n[A-Z]{3,}|\Z)", text, re.DOTALL | re.IGNORECASE
+    )
     if summary_match:
         summary_candidate = summary_match.group(1).strip().replace("\n", " ")
         if summary_candidate:
@@ -118,8 +115,12 @@ def heuristic_parse_resume_to_draft(text: str, source: FactSource = FactSource.r
                 headline = summary_candidate.split(".")[0][:120]
 
     experiences: list[Experience] = []
-    exp_matches = re.finditer(r"([A-Za-z0-9\s]+)\s+[—–-]\s+([A-Za-z0-9\s]+).*?((?:19|20)\d{2}[-–\s]+(?:Present|(?:19|20)\d{2}))", text, re.IGNORECASE)
-    
+    exp_matches = re.finditer(
+        r"([A-Za-z0-9\s]+)\s+[—–-]\s+([A-Za-z0-9\s]+).*?((?:19|20)\d{2}[-–\s]+(?:Present|(?:19|20)\d{2}))",
+        text,
+        re.IGNORECASE,
+    )
+
     count = 0
     for m in exp_matches:
         count += 1
@@ -159,12 +160,24 @@ def heuristic_parse_resume_to_draft(text: str, source: FactSource = FactSource.r
         )
 
     skills: list[Skill] = []
-    common_skills = ["Python", "JavaScript", "TypeScript", "React", "PostgreSQL", "Docker", "Kubernetes", "Rust", "Go", "AWS", "SQL"]
+    common_skills = [
+        "Python",
+        "JavaScript",
+        "TypeScript",
+        "React",
+        "PostgreSQL",
+        "Docker",
+        "Kubernetes",
+        "Rust",
+        "Go",
+        "AWS",
+        "SQL",
+    ]
     for s in common_skills:
         if re.search(rf"\b{re.escape(s)}\b", text, re.IGNORECASE):
             skills.append(
                 Skill(
-                    id=f"skill-{len(skills)+1}",
+                    id=f"skill-{len(skills) + 1}",
                     type=FactType.work,
                     source=source,
                     evidence=f"Mentioned in resume: {s}",

@@ -30,9 +30,7 @@ async def get_profile_draft(
     session: AsyncSession = Depends(get_db_session),
 ) -> ProfileDraft:
     await set_tenant_owner_id(session, owner_id)
-    res = await session.execute(
-        select(ProfileDraftModel).where(ProfileDraftModel.owner_id == owner_id)
-    )
+    res = await session.execute(select(ProfileDraftModel).where(ProfileDraftModel.owner_id == owner_id))
     draft_record = res.scalar_one_or_none()
     if not draft_record:
         raise HTTPException(
@@ -54,9 +52,7 @@ async def patch_profile_draft(
     session: AsyncSession = Depends(get_db_session),
 ) -> ProfileDraft:
     await set_tenant_owner_id(session, owner_id)
-    res = await session.execute(
-        select(ProfileDraftModel).where(ProfileDraftModel.owner_id == owner_id)
-    )
+    res = await session.execute(select(ProfileDraftModel).where(ProfileDraftModel.owner_id == owner_id))
     draft_record = res.scalar_one_or_none()
     if not draft_record:
         raise HTTPException(status_code=404, detail="Draft not found to update")
@@ -78,9 +74,7 @@ async def answer_followups(
     session: AsyncSession = Depends(get_db_session),
 ) -> ProfileDraft:
     await set_tenant_owner_id(session, owner_id)
-    res = await session.execute(
-        select(ProfileDraftModel).where(ProfileDraftModel.owner_id == owner_id)
-    )
+    res = await session.execute(select(ProfileDraftModel).where(ProfileDraftModel.owner_id == owner_id))
     draft_record = res.scalar_one_or_none()
     if not draft_record:
         raise HTTPException(status_code=404, detail="Draft not found")
@@ -131,14 +125,10 @@ async def approve_profile(
     await set_tenant_owner_id(session, owner_id)
     await ensure_tenant_user_exists(session, owner_id)
 
-    res = await session.execute(
-        select(ProfileDraftModel).where(ProfileDraftModel.owner_id == owner_id)
-    )
+    res = await session.execute(select(ProfileDraftModel).where(ProfileDraftModel.owner_id == owner_id))
     draft_record = res.scalar_one_or_none()
     if not draft_record:
-        raise HTTPException(
-            status_code=400, detail="Cannot approve: no draft exists for tenant"
-        )
+        raise HTTPException(status_code=400, detail="Cannot approve: no draft exists for tenant")
 
     # 1. Convert to ApprovedProfile (strip draft flags before converting)
     draft_dict = dict(draft_record.data)
@@ -164,12 +154,7 @@ async def approve_profile(
     session.add(profile_version)
 
     # 3. Auto create/update Site record
-    slug = (
-        approved_profile.profile.name.lower()
-        .replace(" ", "-")
-        .replace(".", "")
-        .replace("'", "")
-    )
+    slug = approved_profile.profile.name.lower().replace(" ", "-").replace(".", "").replace("'", "")
     if not slug:
         slug = f"user-{str(owner_id)[:8]}"
 

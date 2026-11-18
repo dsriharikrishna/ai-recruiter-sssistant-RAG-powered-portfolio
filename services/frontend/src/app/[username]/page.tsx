@@ -9,12 +9,20 @@ interface PageProps {
 
 function PortfolioInner({ params }: PageProps) {
   const resolvedParams = use(params);
-  return <PublicPortfolioView slug={resolvedParams.username || "alex-johnson"} />;
+  return (
+    <PublicPortfolioView slug={resolvedParams.username || "alex-johnson"} />
+  );
 }
 
 export default function Page({ params }: PageProps) {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#07090E] p-8 text-slate-400">Loading portfolio...</div>}>
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#07090E] p-8 text-slate-400">
+          Loading portfolio...
+        </div>
+      }
+    >
       <PortfolioInner params={params} />
     </Suspense>
   );

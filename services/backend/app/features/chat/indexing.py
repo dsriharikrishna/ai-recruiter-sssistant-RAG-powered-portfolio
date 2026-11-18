@@ -59,9 +59,7 @@ def build_chunks(profile: ApprovedProfile) -> list[ChunkSpec]:
             section="overview",
             type="summary",
             content=(
-                f"Candidate: {candidate_name}\n"
-                f"Headline: {profile.profile.headline}\n"
-                f"Summary: {profile.profile.summary}"
+                f"Candidate: {candidate_name}\nHeadline: {profile.profile.headline}\nSummary: {profile.profile.summary}"
             ),
         )
     )

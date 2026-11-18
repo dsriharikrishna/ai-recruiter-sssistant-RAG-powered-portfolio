@@ -34,9 +34,5 @@ def test_models_have_owner_id_or_parent_fk() -> None:
     for table_name in tenant_tables:
         table = tables[table_name]
         assert "owner_id" in table.columns, f"{table_name} missing owner_id"
-        owner_indices = [
-            idx
-            for idx in table.indexes
-            if any(c.name == "owner_id" for c in idx.columns)
-        ]
+        owner_indices = [idx for idx in table.indexes if any(c.name == "owner_id" for c in idx.columns)]
         assert len(owner_indices) > 0, f"{table_name} missing index on owner_id"

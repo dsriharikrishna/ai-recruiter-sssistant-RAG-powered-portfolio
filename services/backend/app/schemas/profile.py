@@ -50,10 +50,7 @@ class BaseFact(BaseModel):
     def check_evidence_requirement(self) -> "BaseFact":
         if self.source != FactSource.user:
             if not self.evidence or not self.evidence.strip():
-                msg = (
-                    f"Evidence text quote is required when source is "
-                    f"'{self.source.value}'"
-                )
+                msg = f"Evidence text quote is required when source is '{self.source.value}'"
                 raise ValueError(msg)
         return self
 
@@ -90,9 +87,7 @@ class Experience(BaseFact):
     start_date: Annotated[str, Field(min_length=7, max_length=7)]
     end_date: Annotated[str, Field(min_length=7, max_length=7)] | None = None
     description: Annotated[str, Field(min_length=1, max_length=4000)]
-    highlights: list[Annotated[str, Field(min_length=1, max_length=1000)]] = Field(
-        default_factory=list
-    )
+    highlights: list[Annotated[str, Field(min_length=1, max_length=1000)]] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def validate_dates(self) -> "Experience":
@@ -106,9 +101,7 @@ class Project(BaseFact):
     name: Annotated[str, Field(min_length=1, max_length=120)]
     description: Annotated[str, Field(min_length=1, max_length=3000)]
     url: Annotated[str, Field(max_length=500)] | None = None
-    technologies: list[Annotated[str, Field(min_length=1, max_length=50)]] = Field(
-        default_factory=list
-    )
+    technologies: list[Annotated[str, Field(min_length=1, max_length=50)]] = Field(default_factory=list)
     start_date: Annotated[str, Field(min_length=7, max_length=7)] | None = None
     end_date: Annotated[str, Field(min_length=7, max_length=7)] | None = None
 
@@ -159,15 +152,9 @@ class Certification(BaseFact):
 class BotSettings(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    salary_policy: Annotated[str, Field(min_length=1, max_length=500)] = (
-        "Discuss directly with candidate"
-    )
-    availability_policy: Annotated[str, Field(min_length=1, max_length=500)] = (
-        "Available with 2 weeks notice"
-    )
-    tone: Annotated[str, Field(min_length=1, max_length=100)] = (
-        "professional and concise"
-    )
+    salary_policy: Annotated[str, Field(min_length=1, max_length=500)] = "Discuss directly with candidate"
+    availability_policy: Annotated[str, Field(min_length=1, max_length=500)] = "Available with 2 weeks notice"
+    tone: Annotated[str, Field(min_length=1, max_length=100)] = "professional and concise"
     resume_downloadable: bool = False
 
 

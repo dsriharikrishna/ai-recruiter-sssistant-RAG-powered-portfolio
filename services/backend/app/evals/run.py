@@ -18,10 +18,7 @@ def run_evals() -> int:
     print("=" * 80)
     print("EXTRACTION EVALUATION REPORT")
     print("=" * 80)
-    header = (
-        f"{'Fixture Name':<20} | {'Accuracy':<10} | "
-        f"{'Invented':<10} | {'Missing':<10} | {'Status':<8}"
-    )
+    header = f"{'Fixture Name':<20} | {'Accuracy':<10} | {'Invented':<10} | {'Missing':<10} | {'Status':<8}"
     print(header)
     print("-" * 80)
 

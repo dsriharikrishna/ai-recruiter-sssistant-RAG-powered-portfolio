@@ -8,13 +8,14 @@ from app.features.chat.indexing import (
     build_summary,
     index_profile,
 )
-from app.features.chat.service import ChatEvent, Route, answer, route_question
+from app.features.chat.service import Route, answer, route_question
 from app.features.resumes.parser import parse_resume_to_draft
 from app.features.resumes.service import (
     extract_profile,
     merge_drafts,
     verify_evidence,
 )
+from app.schemas.api_v1 import ChatEvent
 from app.schemas.profile import ApprovedProfile, FactSource, FlagKind, ProfileDraft
 
 # ==========================================
@@ -91,14 +92,8 @@ async def test_index_profile_contract() -> None:
 
 def test_route_question_intents() -> None:
     assert route_question("How can I email Alex?", []) == Route.CONTACT_INFO
-    assert (
-        route_question("What is Alex's experience with Kafka?", [])
-        == Route.PROFILE_RAG
-    )
-    assert (
-        route_question("What will the weather be tomorrow in London?", [])
-        == Route.OUT_OF_SCOPE
-    )
+    assert route_question("What is Alex's experience with Kafka?", []) == Route.PROFILE_RAG
+    assert route_question("What will the weather be tomorrow in London?", []) == Route.OUT_OF_SCOPE
 
 
 @pytest.mark.asyncio

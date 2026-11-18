@@ -30,9 +30,7 @@ class BaseTenantRepository[ModelType: Base]:
             )
         return entity
 
-    async def list_all(
-        self, owner_id: uuid.UUID, skip: int = 0, limit: int = 100
-    ) -> list[ModelType]:
+    async def list_all(self, owner_id: uuid.UUID, skip: int = 0, limit: int = 100) -> list[ModelType]:
         stmt = (
             select(self.model)
             .where(self.model.owner_id == owner_id)  # type: ignore[attr-defined]
@@ -50,9 +48,7 @@ class BaseTenantRepository[ModelType: Base]:
         await self.session.flush()
         return entity
 
-    async def update(
-        self, owner_id: uuid.UUID, entity_id: uuid.UUID, **kwargs: Any
-    ) -> ModelType:
+    async def update(self, owner_id: uuid.UUID, entity_id: uuid.UUID, **kwargs: Any) -> ModelType:
         # Verify entity exists and belongs to owner
         await self.get_by_id(owner_id=owner_id, entity_id=entity_id)
 

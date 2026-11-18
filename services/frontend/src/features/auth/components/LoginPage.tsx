@@ -3,7 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Bot, ArrowLeft, ShieldCheck, Sparkles, ArrowRight, Loader2 } from "lucide-react";
+import {
+  Bot,
+  ArrowLeft,
+  ShieldCheck,
+  Sparkles,
+  ArrowRight,
+  Loader2,
+} from "lucide-react";
 import { useLogin } from "../hooks/useAuth";
 
 export function LoginPage() {
@@ -36,27 +43,29 @@ export function LoginPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#07090E] text-slate-100 flex flex-col justify-center items-center p-6 font-sans selection:bg-indigo-500 selection:text-white">
+    <main className="flex min-h-screen flex-col items-center justify-center bg-[#07090E] p-6 font-sans text-slate-100 selection:bg-indigo-500 selection:text-white">
       <div className="w-full max-w-md space-y-6">
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-white transition"
+          className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-400 transition hover:text-white"
         >
-          <ArrowLeft className="w-3.5 h-3.5" />
+          <ArrowLeft className="h-3.5 w-3.5" />
           Back to Home
         </Link>
 
-        <div className="p-8 bg-slate-900/80 border border-slate-800 rounded-3xl shadow-2xl backdrop-blur-xl space-y-6">
+        <div className="space-y-6 rounded-3xl border border-slate-800 bg-slate-900/80 p-8 shadow-2xl backdrop-blur-xl">
           <div className="space-y-2">
-            <div className="h-10 w-10 rounded-xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 mb-2">
-              <Bot className="w-5 h-5" />
+            <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-xl border border-indigo-500/30 bg-indigo-600/20 text-indigo-400">
+              <Bot className="h-5 w-5" />
             </div>
-            <div className="inline-flex items-center gap-1.5 text-[11px] font-mono text-indigo-400 bg-indigo-500/10 px-2.5 py-0.5 rounded-full border border-indigo-500/20">
-              <Sparkles className="w-3 h-3" />
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-indigo-500/20 bg-indigo-500/10 px-2.5 py-0.5 font-mono text-[11px] text-indigo-400">
+              <Sparkles className="h-3 w-3" />
               HTTP-Only Cookies &bull; DEV_AUTH
             </div>
-            <h1 className="text-2xl font-bold text-white tracking-tight">Developer Login</h1>
-            <p className="text-xs text-slate-400 leading-relaxed">
+            <h1 className="text-2xl font-bold tracking-tight text-white">
+              Developer Login
+            </h1>
+            <p className="text-xs leading-relaxed text-slate-400">
               Authenticate tenant context for isolated database sessions.
             </p>
           </div>
@@ -70,31 +79,31 @@ export function LoginPage() {
                 type="text"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition"
+                className="w-full rounded-xl border border-slate-800 bg-slate-950 px-3.5 py-2.5 text-xs text-white placeholder-slate-500 transition focus:border-indigo-500 focus:outline-none"
                 required
               />
             </div>
             <button
               type="submit"
               disabled={loginMutation.isPending}
-              className="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-800 text-white font-semibold text-xs rounded-xl transition shadow-lg shadow-indigo-600/25 flex items-center justify-center gap-2"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-3 text-xs font-semibold text-white shadow-lg shadow-indigo-600/25 transition hover:bg-indigo-500 disabled:bg-slate-800"
             >
               {loginMutation.isPending ? (
                 <>
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
                   Authenticating...
                 </>
               ) : (
                 <>
                   Enter Dashboard
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <ArrowRight className="h-3.5 w-3.5" />
                 </>
               )}
             </button>
           </form>
 
-          <div className="pt-2 border-t border-slate-800/80 flex items-center justify-center gap-2 text-[11px] text-slate-500 font-mono">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+          <div className="flex items-center justify-center gap-2 border-t border-slate-800/80 pt-2 font-mono text-[11px] text-slate-500">
+            <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
             <span>Strict Tenant RLS Bound</span>
           </div>
         </div>

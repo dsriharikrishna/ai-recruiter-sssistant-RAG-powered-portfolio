@@ -42,9 +42,7 @@ class ProfileVersionRepository(BaseTenantRepository[ProfileVersionModel]):
     def __init__(self, session: AsyncSession) -> None:
         super().__init__(model=ProfileVersionModel, session=session)
 
-    async def get_by_version(
-        self, owner_id: uuid.UUID, version: int
-    ) -> ProfileVersionModel:
+    async def get_by_version(self, owner_id: uuid.UUID, version: int) -> ProfileVersionModel:
         stmt = (
             select(ProfileVersionModel)
             .where(ProfileVersionModel.owner_id == owner_id)

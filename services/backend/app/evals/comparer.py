@@ -92,11 +92,7 @@ def compare_draft_to_expected(
 
     field_accuracy = (matching_fields / total_fields) if total_fields > 0 else 1.0
 
-    passed = (
-        total_invented <= max_invented
-        and total_missing <= max_missing
-        and field_accuracy >= min_accuracy
-    )
+    passed = total_invented <= max_invented and total_missing <= max_missing and field_accuracy >= min_accuracy
 
     return EvalMetrics(
         fixture_name=fixture_name,

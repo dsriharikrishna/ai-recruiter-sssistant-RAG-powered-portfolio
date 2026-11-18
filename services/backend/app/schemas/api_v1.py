@@ -6,10 +6,8 @@ from pydantic import BaseModel, Field
 from app.schemas.profile import (
     ApprovedProfile,
     Certification,
-    Contact,
     Education,
     Experience,
-    Profile,
     ProfileDraft,
     Project,
     Skill,

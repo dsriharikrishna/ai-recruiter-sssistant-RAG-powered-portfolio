@@ -1,12 +1,11 @@
 from enum import StrEnum
-from typing import Any
 
+import redis.asyncio as aioredis
 from fastapi import APIRouter, Depends, status
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
-import redis.asyncio as aioredis
 
 from app.core.redis import get_redis_client
 from app.db.session import get_db_session

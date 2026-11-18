@@ -24,27 +24,19 @@ EMBEDDING_DIM = get_embedding_dim()
 class User(Base, TimestampMixin, UUIDPrimaryKeyMixin):
     __tablename__ = "users"
 
-    email: Mapped[str] = mapped_column(
-        String(255), unique=True, index=True, nullable=False
-    )
+    email: Mapped[str] = mapped_column(String(255), unique=True, index=True, nullable=False)
     hashed_password: Mapped[str] = mapped_column(String(255), nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
 
-    documents: Mapped[list["Document"]] = relationship(
-        "Document", back_populates="owner", cascade="all, delete-orphan"
-    )
+    documents: Mapped[list["Document"]] = relationship("Document", back_populates="owner", cascade="all, delete-orphan")
     profile_drafts: Mapped[list["ProfileDraftModel"]] = relationship(
         "ProfileDraftModel", back_populates="owner", cascade="all, delete-orphan"
     )
     profile_versions: Mapped[list["ProfileVersionModel"]] = relationship(
         "ProfileVersionModel", back_populates="owner", cascade="all, delete-orphan"
     )
-    chunks: Mapped[list["Chunk"]] = relationship(
-        "Chunk", back_populates="owner", cascade="all, delete-orphan"
-    )
-    sites: Mapped[list["Site"]] = relationship(
-        "Site", back_populates="owner", cascade="all, delete-orphan"
-    )
+    chunks: Mapped[list["Chunk"]] = relationship("Chunk", back_populates="owner", cascade="all, delete-orphan")
+    sites: Mapped[list["Site"]] = relationship("Site", back_populates="owner", cascade="all, delete-orphan")
     usage_events: Mapped[list["UsageEvent"]] = relationship(
         "UsageEvent", back_populates="owner", cascade="all, delete-orphan"
     )
@@ -82,9 +74,7 @@ class ExtractionJob(Base, TimestampMixin, UUIDPrimaryKeyMixin):
     error_code: Mapped[str | None] = mapped_column(String(100), nullable=True)
     timings: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict, nullable=False)
 
-    document: Mapped[Document] = relationship(
-        "Document", back_populates="extraction_jobs"
-    )
+    document: Mapped[Document] = relationship("Document", back_populates="extraction_jobs")
 
 
 class ProfileDraftModel(Base, TimestampMixin, UUIDPrimaryKeyMixin):
@@ -114,17 +104,11 @@ class ProfileVersionModel(Base, TimestampMixin, UUIDPrimaryKeyMixin):
     )
     version: Mapped[int] = mapped_column(Integer, nullable=False)
     approved: Mapped[dict[str, Any]] = mapped_column(JSONB, nullable=False)
-    extraction_diff: Mapped[dict[str, Any]] = mapped_column(
-        JSONB, default=dict, nullable=False
-    )
+    extraction_diff: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict, nullable=False)
 
     owner: Mapped[User] = relationship("User", back_populates="profile_versions")
 
-    __table_args__ = (
-        UniqueConstraint(
-            "owner_id", "version", name="uq_profile_versions_owner_version"
-        ),
-    )
+    __table_args__ = (UniqueConstraint("owner_id", "version", name="uq_profile_versions_owner_version"),)
 
 
 class Chunk(Base, TimestampMixin, UUIDPrimaryKeyMixin):
@@ -139,9 +123,7 @@ class Chunk(Base, TimestampMixin, UUIDPrimaryKeyMixin):
     version: Mapped[int] = mapped_column(Integer, nullable=False)
     content: Mapped[str] = mapped_column(Text, nullable=False)
     content_hash: Mapped[str] = mapped_column(String(64), nullable=False)
-    embedding: Mapped[list[float]] = mapped_column(
-        Vector(EMBEDDING_DIM), nullable=False
-    )
+    embedding: Mapped[list[float]] = mapped_column(Vector(EMBEDDING_DIM), nullable=False)
     tsv: Mapped[Any] = mapped_column(TSVECTOR, nullable=True)
     type: Mapped[str] = mapped_column(String(50), nullable=False)
     section: Mapped[str] = mapped_column(String(50), nullable=False)
@@ -170,16 +152,12 @@ class Site(Base, TimestampMixin, UUIDPrimaryKeyMixin):
         nullable=False,
         index=True,
     )
-    slug: Mapped[str] = mapped_column(
-        String(100), unique=True, index=True, nullable=False
-    )
+    slug: Mapped[str] = mapped_column(String(100), unique=True, index=True, nullable=False)
     template: Mapped[str] = mapped_column(String(50), default="default", nullable=False)
     theme: Mapped[str] = mapped_column(String(50), default="light", nullable=False)
     published_version: Mapped[int | None] = mapped_column(Integer, nullable=True)
     bot_enabled: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
-    bot_settings: Mapped[dict[str, Any]] = mapped_column(
-        JSONB, default=dict, nullable=False
-    )
+    bot_settings: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict, nullable=False)
 
     owner: Mapped[User] = relationship("User", back_populates="sites")
     conversations: Mapped[list["Conversation"]] = relationship(
@@ -218,16 +196,12 @@ class Message(Base, TimestampMixin, UUIDPrimaryKeyMixin):
     role: Mapped[str] = mapped_column(String(20), nullable=False)
     content: Mapped[str] = mapped_column(Text, nullable=False)
     chunk_ids: Mapped[list[Any]] = mapped_column(JSONB, default=list, nullable=False)
-    prompt_version: Mapped[str] = mapped_column(
-        String(50), default="v1", nullable=False
-    )
+    prompt_version: Mapped[str] = mapped_column(String(50), default="v1", nullable=False)
     model: Mapped[str] = mapped_column(String(100), nullable=False)
     prompt_tokens: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     completion_tokens: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
 
-    conversation: Mapped[Conversation] = relationship(
-        "Conversation", back_populates="messages"
-    )
+    conversation: Mapped[Conversation] = relationship("Conversation", back_populates="messages")
 
 
 class UnansweredQuestion(Base, TimestampMixin, UUIDPrimaryKeyMixin):
@@ -256,8 +230,6 @@ class UsageEvent(Base, TimestampMixin, UUIDPrimaryKeyMixin):
     )
     event_type: Mapped[str] = mapped_column(String(100), nullable=False)
     quantity: Mapped[float] = mapped_column(Float, default=1.0, nullable=False)
-    metadata_payload: Mapped[dict[str, Any]] = mapped_column(
-        JSONB, default=dict, nullable=False
-    )
+    metadata_payload: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict, nullable=False)
 
     owner: Mapped[User] = relationship("User", back_populates="usage_events")

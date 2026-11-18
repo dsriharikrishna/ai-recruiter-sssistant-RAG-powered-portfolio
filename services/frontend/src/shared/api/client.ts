@@ -27,14 +27,19 @@ export class ApiClient {
     return url.toString();
   }
 
-  private async execute<T>(method: HttpMethod, endpoint: string, config: RequestConfig = {}): Promise<T> {
+  private async execute<T>(
+    method: HttpMethod,
+    endpoint: string,
+    config: RequestConfig = {}
+  ): Promise<T> {
     const { params, headers: customHeaders, body, ...restConfig } = config;
     const url = this.buildUrl(endpoint, params);
 
     const headers = new Headers(customHeaders);
 
     // Support FormData uploads without forcing Content-Type: application/json
-    const isFormData = typeof FormData !== "undefined" && body instanceof FormData;
+    const isFormData =
+      typeof FormData !== "undefined" && body instanceof FormData;
     if (!isFormData && !headers.has("Content-Type")) {
       headers.set("Content-Type", "application/json");
     }
@@ -50,7 +55,11 @@ export class ApiClient {
     const response = await fetch(url, {
       method,
       headers,
-      body: isFormData ? (body as FormData) : body ? JSON.stringify(body) : undefined,
+      body: isFormData
+        ? (body as FormData)
+        : body
+          ? JSON.stringify(body)
+          : undefined,
       credentials: "include", // HTTP-only cookie support
       ...restConfig,
     });
@@ -82,15 +91,27 @@ export class ApiClient {
     return this.execute<T>("GET", endpoint, config);
   }
 
-  public post<T>(endpoint: string, body?: unknown, config?: RequestConfig): Promise<T> {
+  public post<T>(
+    endpoint: string,
+    body?: unknown,
+    config?: RequestConfig
+  ): Promise<T> {
     return this.execute<T>("POST", endpoint, { ...config, body });
   }
 
-  public put<T>(endpoint: string, body?: unknown, config?: RequestConfig): Promise<T> {
+  public put<T>(
+    endpoint: string,
+    body?: unknown,
+    config?: RequestConfig
+  ): Promise<T> {
     return this.execute<T>("PUT", endpoint, { ...config, body });
   }
 
-  public patch<T>(endpoint: string, body?: unknown, config?: RequestConfig): Promise<T> {
+  public patch<T>(
+    endpoint: string,
+    body?: unknown,
+    config?: RequestConfig
+  ): Promise<T> {
     return this.execute<T>("PATCH", endpoint, { ...config, body });
   }
 

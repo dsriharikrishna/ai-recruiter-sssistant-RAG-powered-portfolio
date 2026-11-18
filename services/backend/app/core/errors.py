@@ -44,9 +44,7 @@ class ForbiddenError(AppError):
 
 
 class TenantIsolationError(AppError):
-    def __init__(
-        self, message: str = "Access denied: tenant boundary violation"
-    ) -> None:
+    def __init__(self, message: str = "Access denied: tenant boundary violation") -> None:
         super().__init__(message=message, status_code=status.HTTP_403_FORBIDDEN)
 
 
@@ -63,9 +61,7 @@ async def app_error_handler(request: Request, exc: AppError) -> JSONResponse:
     )
 
 
-async def validation_error_handler(
-    request: Request, exc: RequestValidationError
-) -> JSONResponse:
+async def validation_error_handler(request: Request, exc: RequestValidationError) -> JSONResponse:
     errors = exc.errors()
     logger.info(
         "Request validation error",
