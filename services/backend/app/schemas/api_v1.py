@@ -3,7 +3,17 @@ from typing import Any
 
 from pydantic import BaseModel, Field
 
-from app.schemas.profile import ApprovedProfile, ProfileDraft
+from app.schemas.profile import (
+    ApprovedProfile,
+    Certification,
+    Contact,
+    Education,
+    Experience,
+    Profile,
+    ProfileDraft,
+    Project,
+    Skill,
+)
 
 
 class ResumeUploadResponse(BaseModel):
@@ -13,10 +23,9 @@ class ResumeUploadResponse(BaseModel):
 
 
 class JobStatusResponse(BaseModel):
-    id: uuid.UUID
-    document_id: uuid.UUID
+    job_id: uuid.UUID
     status: str
-    error_code: str | None = None
+    errors: list[str] = Field(default_factory=list)
     timings: dict[str, Any] = Field(default_factory=dict)
 
 
@@ -39,8 +48,8 @@ class ProfileApproveResponse(BaseModel):
 
 class ProfileVersionSummary(BaseModel):
     version: int
-    approved_at: str
-    summary: str
+    created_at: str | None = None
+    summary: str = ""
 
 
 class ProfileVersionsResponse(BaseModel):
@@ -48,10 +57,10 @@ class ProfileVersionsResponse(BaseModel):
 
 
 class SitePublishRequest(BaseModel):
-    slug: str
-    template: str = "default"
-    theme: str = "light"
-    bot_enabled: bool = True
+    slug: str | None = None
+    template: str | None = "default"
+    theme: str | None = "light"
+    bot_enabled: bool | None = True
 
 
 class SiteResponse(BaseModel):
@@ -78,7 +87,7 @@ class AccountDeleteResponse(BaseModel):
     message: str = "Account and all associated tenant data permanently deleted"
 
 
-# Public DTOs
+# Public Portfolio DTOs
 class PublicContact(BaseModel):
     email: str | None = None
     phone: str | None = None
@@ -94,14 +103,30 @@ class PublicSiteResponse(BaseModel):
     headline: str
     summary: str
     contact: PublicContact
-    experiences: list[dict[str, Any]] = Field(default_factory=list)
-    projects: list[dict[str, Any]] = Field(default_factory=list)
-    skills: list[dict[str, Any]] = Field(default_factory=list)
-    educations: list[dict[str, Any]] = Field(default_factory=list)
-    certifications: list[dict[str, Any]] = Field(default_factory=list)
+    experiences: list[Experience] = Field(default_factory=list)
+    projects: list[Project] = Field(default_factory=list)
+    skills: list[Skill] = Field(default_factory=list)
+    educations: list[Education] = Field(default_factory=list)
+    certifications: list[Certification] = Field(default_factory=list)
 
 
 class PublicChatRequest(BaseModel):
     slug: str
     message: str
     conversation_id: uuid.UUID | None = None
+
+
+# Recruiter Chat Streaming Models
+class ChatSourceItem(BaseModel):
+    entity_id: str
+    title: str
+
+
+class ChatEvent(BaseModel):
+    event: str
+    data: dict[str, Any] = Field(default_factory=dict)
+
+
+class ChatMessageHistory(BaseModel):
+    role: str
+    content: str

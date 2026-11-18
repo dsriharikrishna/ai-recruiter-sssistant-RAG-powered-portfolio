@@ -31,7 +31,7 @@ def test_unauthenticated_request_returns_401(
     client = TestClient(app)
     response = client.get("/v1/protected-test")
     assert response.status_code == 401
-    assert "Invalid or missing authentication" in response.json()["error"]["message"]
+    assert "Missing Authorization header" in response.json()["error"]["message"]
 
 
 def test_dev_auth_header_accepted_when_dev_auth_true(

@@ -7,6 +7,22 @@ import pytest_asyncio
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from app.core.config import Settings
+from sqlalchemy.ext.compiler import compiles
+from sqlalchemy.dialects.postgresql import TSVECTOR, JSONB
+from pgvector.sqlalchemy import Vector
+
+@compiles(TSVECTOR, "sqlite")
+def compile_tsvector_sqlite(type_, compiler, **kw):
+    return "TEXT"
+
+@compiles(Vector, "sqlite")
+def compile_vector_sqlite(type_, compiler, **kw):
+    return "TEXT"
+
+@compiles(JSONB, "sqlite")
+def compile_jsonb_sqlite(type_, compiler, **kw):
+    return "JSON"
+
 from app.core.errors import NotFoundError
 from app.models.base import Base
 from app.models.models import User

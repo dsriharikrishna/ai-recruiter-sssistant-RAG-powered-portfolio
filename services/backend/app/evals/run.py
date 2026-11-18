@@ -3,7 +3,7 @@ import sys
 from app.evals.comparer import compare_draft_to_expected
 from app.evals.config import MAX_INVENTED_ITEMS, MAX_MISSING_ITEMS, MIN_FIELD_ACCURACY
 from app.evals.loader import load_fixtures
-from app.modules.extraction.service import extract_profile
+from app.features.resumes.service import extract_profile
 from app.schemas.profile import FactSource
 
 

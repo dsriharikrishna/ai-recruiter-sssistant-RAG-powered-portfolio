@@ -23,6 +23,12 @@ class Settings(BaseSettings):
     JWT_SECRET_KEY: str = ...  # type: ignore[assignment]
     OPENAI_API_KEY: str = ...  # type: ignore[assignment]
 
+    # AI Providers
+    GEMINI_API_KEY: str | None = None
+    GEMINI_MODEL: str = "gemini-2.5-flash"
+    OPENAI_EMBEDDING_MODEL: str = "text-embedding-3-small"
+    OPENAI_CHAT_MODEL: str = "gpt-4o-mini"
+
     JWT_ALGORITHM: str = "HS256"
     JWKS_URL: str | None = None
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 1440
@@ -37,12 +43,13 @@ class Settings(BaseSettings):
             return [origin.strip() for origin in v.split(",") if origin.strip()]
         return v
 
-    def validate_security(self) -> None:
-        """Enforces security rules such as refusing DEV_AUTH in production."""
-        if self.ENV.lower() == "production" and self.DEV_AUTH:
-            raise ValueError(
-                "Security violation: DEV_AUTH cannot be enabled when ENV=production"
-            )
+    @field_validator("DEV_AUTH", mode="after")
+    @classmethod
+    def validate_dev_auth_env(cls, v: bool, info) -> bool:
+        env = info.data.get("ENV", "development")
+        if isinstance(env, str) and env.lower() == "production" and v:
+            raise ValueError("DEV_AUTH cannot be enabled when ENV=production")
+        return v
 
 
 settings: Settings | None = None
@@ -52,5 +59,4 @@ def get_settings() -> Settings:
     global settings
     if settings is None:
         settings = Settings()
-        settings.validate_security()
     return settings

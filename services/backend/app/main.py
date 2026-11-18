@@ -4,10 +4,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
 
-from app.api.v1.mock_routes import router as mock_routes_router
-from app.api.v1.ready import router as ready_router
 from app.core.config import get_settings
 from app.core.errors import (
     AppError,
@@ -16,10 +13,11 @@ from app.core.errors import (
     validation_error_handler,
 )
 from app.core.logging import setup_logging
-
-
-class HealthResponse(BaseModel):
-    status: str
+from app.features.chat.router import router as chat_router
+from app.features.health.router import router as health_router
+from app.features.profiles.router import router as profiles_router
+from app.features.resumes.router import router as resumes_router
+from app.features.sites.router import router as sites_router
 
 
 @asynccontextmanager
@@ -60,13 +58,13 @@ def create_app() -> FastAPI:
     application.add_exception_handler(RequestValidationError, validation_error_handler)  # type: ignore[arg-type]
     application.add_exception_handler(Exception, generic_exception_handler)
 
-    # Health and readiness routes
-    @application.get("/health", response_model=HealthResponse, tags=["health"])
-    async def health_check() -> HealthResponse:
-        return HealthResponse(status="ok")
+    # Feature Routers
+    application.include_router(health_router)
+    application.include_router(resumes_router)
+    application.include_router(profiles_router)
+    application.include_router(sites_router)
+    application.include_router(chat_router)
 
-    application.include_router(ready_router)
-    application.include_router(mock_routes_router)
     return application
 
 
