@@ -79,7 +79,19 @@ Respond ONLY with valid JSON conforming to the following structure:
       "end_date": "YYYY-MM or null"
     }
   ],
-  "certifications": [],
+  "certifications": [
+    {
+      "id": "cert-1",
+      "type": "certification",
+      "source": "resume",
+      "evidence": "Exact quote from resume mentioning certification",
+      "name": "Certification Name",
+      "issuer": "Issuing Organization (e.g. Amazon Web Services)",
+      "issue_date": "YYYY-MM or null",
+      "expiration_date": "YYYY-MM or null",
+      "url": null
+    }
+  ],
   "bot_settings": {
     "salary_policy": "Market rate commensurate with experience",
     "availability_policy": "Standard notice period",
